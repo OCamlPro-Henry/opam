@@ -1,4 +1,4 @@
-opam-version: "1.2"
+opam-version: "1.3"
 name: "opam-lib"
 version: "1.3.0~dev"
 maintainer: "opam-devel@lists.ocaml.org"
@@ -10,9 +10,11 @@ homepage: "https://opam.ocaml.org"
 bug-reports: "https://github.com/ocaml/opam/issues"
 dev-repo: "https://github.com/ocaml/opam"
 build: [
-  ["./configure"]
-  [make]
-  [make "-C" "src" "../opam-lib.install"]
+  ["./configure" "--prefix" prefix]
+  [make "-C" "src" "opam-lib"]
+  [make "-C" "src" "opam-installer"]
+  [make "opam-lib.install"]
+  [make "libinstall"]
 ]
 depends: [
   "ocamlgraph"
