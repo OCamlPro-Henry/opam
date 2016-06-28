@@ -58,6 +58,8 @@ src/opam-installer
 src/opam-check
 src/opamlfind
 src/opam-admin.top
+src/opam-manager
+src/opam-manager-wrapper
 src/*.META
 ._d
 ._ncdi

@@ -11,6 +11,8 @@ all:
 	$(MAKE) opam-admin
 	$(MAKE) opam-installer
 	$(MAKE) opam-admin.top
+	$(MAKE) opam-manager-wrapper
+	$(MAKE) opam-manager
 
 # --
 
@@ -235,6 +237,51 @@ define PROJ_client
   RESULT = opam-client
 endef
 export PROJ_client
+
+# -- opam-manager-core -- #
+opam-manager-core.cma: opam-core.cma opam-format.cma opam-state.cma ALWAYS
+opam-manager-core.cmxa: opam-core.cmxa opam-format.cmxa opam-state.cmxa ALWAYS
+
+SRC_managerLib = \
+  managerVersion.ml \
+  managerMisc.ml \
+  managerPath.ml \
+  managerTypes.mli \
+  managerRoot.ml \
+  managerFile.ml \
+  managerSwitch.ml \
+  managerDefault.ml \
+  managerWrapper.ml \
+  managerExec.ml \
+  managerConfig.ml
+
+define PROJ_managerLib
+  SOURCES = $(call addmli,manager,$(SRC_managerLib))
+  RESULT = opam-managerLib
+endef
+export PROJ_managerLib
+
+# -- opam-manager-wrapper binary -- #
+
+opam-manager-wrapper: $(addsuffix $(LIBEXT),$(OPAMLIB) ./opam-managerLib) ALWAYS
+	$(MAKE) -f $(OCAMLMAKEFILE) subprojs SUBPROJS=opam_manager_wrapper SUBTARGET=$(BINTARGET)
+
+define PROJ_opam_manager_wrapper
+  SOURCES = $(call addmli,manager,opam_manager_wrapper.ml)
+  RESULT = opam-manager-wrapper
+  LIBS = $(LIBS) $(OPAMLIB) ./opam-managerLib
+endef
+export PROJ_opam_manager_wrapper
+
+opam-manager: $(addsuffix $(LIBEXT),$(OPAMLIB) ./opam-managerLib) ALWAYS
+	$(MAKE) -f $(OCAMLMAKEFILE) subprojs SUBPROJS=opam_manager SUBTARGET=$(BINTARGET)
+
+define PROJ_opam_manager
+  SOURCES = $(call addmli,manager,opam_manager.ml)
+  RESULT = opam-manager
+  LIBS = $(LIBS) $(OPAMLIB) ./opam-managerLib
+endef
+export PROJ_opam_manager
 
 # -- opam binary -- #
 

@@ -102,7 +102,7 @@ $(OPAM_FULL).tar.gz:
 	ln -s .
 
 fastlink:
-	@$(foreach b,opam opam-admin opam-installer opam-check,\
+	@$(foreach b,opam opam-admin opam-installer opam-check opam-manager opam-manager-wrapper,\
 	   ln -sf ../_obuild/$b/$b.asm src/$b;)
 	@$(foreach l,core format solver repository state client,\
 	   $(foreach e,a cma cmxa,ln -sf ../_obuild/opam-$l/opam-$l.$e src/opam-$l.$e;)\
